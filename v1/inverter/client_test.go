@@ -22,14 +22,19 @@ const (
 
 // MockRoundTripper is a custom RoundTripper for mocking HTTP responses
 type MockRoundTripper struct {
+	ExpectedURL string
 	// Map URLs to responses
-	Responses map[string]*http.Response
+	Response *http.Response
 }
 
 // RoundTrip implements the RoundTripper interface
 func (mrt *MockRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	if resp, exists := mrt.Responses[req.URL.String()]; exists {
-		return resp, nil
+	if req.URL.String() != mrt.ExpectedURL {
+		return nil, fmt.Errorf("expected URL: %s, got: %s", mrt.ExpectedURL, req.URL.String())
+	}
+
+	if mrt.Response != nil {
+		return mrt.Response, nil
 	}
 
 	// Default response if URL not mocked
@@ -56,9 +61,8 @@ func newMockClient(t *testing.T, path string, statusCode int, testURL string) *h
 
 	// Initialize the MockRoundTripper with desired responses
 	mockTransport := &MockRoundTripper{
-		Responses: map[string]*http.Response{
-			testURL: mockResponse,
-		},
+		ExpectedURL: testURL,
+		Response:    mockResponse,
 	}
 
 	// Create an http.Client with the mock transport
