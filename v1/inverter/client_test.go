@@ -22,7 +22,9 @@ const (
 
 // MockRoundTripper is a custom RoundTripper for mocking HTTP responses
 type MockRoundTripper struct {
-	ExpectedURL string
+	t                *testing.T
+	ExpectedBodyJSON string
+	ExpectedURL      string
 	// Map URLs to responses
 	Response *http.Response
 }
@@ -31,6 +33,22 @@ type MockRoundTripper struct {
 func (mrt *MockRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	if req.URL.String() != mrt.ExpectedURL {
 		return nil, fmt.Errorf("expected URL: %s, got: %s", mrt.ExpectedURL, req.URL.String())
+	}
+
+	if req.Header.Get("Authorization") != "Bearer "+testToken {
+		return nil, fmt.Errorf("expected Authorization: %s, got: %s", testToken, req.Header.Get("Authorization"))
+	}
+
+	if req.Header.Get("Content-Type") != "application/json" {
+		return nil, fmt.Errorf("expected Content-Type: application/json, got: %s", req.Header.Get("Content-Type"))
+	}
+
+	if mrt.ExpectedBodyJSON != "" {
+		b, err := io.ReadAll(req.Body)
+		if err != nil {
+			return nil, err
+		}
+		require.JSONEq(mrt.t, mrt.ExpectedBodyJSON, string(b))
 	}
 
 	if mrt.Response != nil {
@@ -45,7 +63,13 @@ func (mrt *MockRoundTripper) RoundTrip(req *http.Request) (*http.Response, error
 	}, nil
 }
 
-func newMockClient(t *testing.T, path string, statusCode int, testURL string) *http.Client {
+func newMockClient(
+	t *testing.T,
+	path string,
+	statusCode int,
+	testURL string,
+	expectedBodyJson string,
+) *http.Client {
 	t.Helper()
 
 	b, err := os.ReadFile(path)
@@ -61,8 +85,10 @@ func newMockClient(t *testing.T, path string, statusCode int, testURL string) *h
 
 	// Initialize the MockRoundTripper with desired responses
 	mockTransport := &MockRoundTripper{
-		ExpectedURL: testURL,
-		Response:    mockResponse,
+		t:                t,
+		ExpectedBodyJSON: expectedBodyJson,
+		ExpectedURL:      testURL,
+		Response:         mockResponse,
 	}
 
 	// Create an http.Client with the mock transport
@@ -87,6 +113,7 @@ func TestClient_ListSettings(t *testing.T) {
 			"testdata/list_settings_200.json",
 			http.StatusOK,
 			testURL,
+			"",
 		)
 
 		cl := inverter.NewClient(testToken, inverter.WithHTTPClient(mockHTTPClient))
@@ -132,6 +159,7 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 			"testdata/read_charger_start_200.json",
 			http.StatusOK,
 			testURL,
+			"",
 		)
 
 		cl := inverter.NewClient(
@@ -176,6 +204,7 @@ func TestClient_WriteSettingChargerStart(t *testing.T) {
 			"testdata/write_charger_start_200.json",
 			http.StatusOK,
 			testURL,
+			"{ \"value\":\"16:00\" }",
 		)
 
 		cl := inverter.NewClient(
@@ -223,6 +252,7 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 			"testdata/read_charger_end_200.json",
 			http.StatusOK,
 			testURL,
+			"",
 		)
 
 		cl := inverter.NewClient(
@@ -267,6 +297,7 @@ func TestClient_WriteSettingChargerEnd(t *testing.T) {
 			"testdata/write_charger_end_200.json",
 			http.StatusOK,
 			testURL,
+			"{ \"value\":\"16:00\" }",
 		)
 
 		cl := inverter.NewClient(
@@ -314,6 +345,7 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 			"testdata/read_charger_enabled_200.json",
 			http.StatusOK,
 			testURL,
+			"",
 		)
 
 		cl := inverter.NewClient(
@@ -358,6 +390,7 @@ func TestClient_WriteSettingChargerEnabled(t *testing.T) {
 			"testdata/write_charger_enabled_200.json",
 			http.StatusOK,
 			testURL,
+			"{ \"value\": true }",
 		)
 
 		cl := inverter.NewClient(
@@ -405,6 +438,7 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 			"testdata/read_charger_limit_200.json",
 			http.StatusOK,
 			testURL,
+			"",
 		)
 
 		cl := inverter.NewClient(
@@ -449,6 +483,7 @@ func TestClient_WriteSettingChargerLimit(t *testing.T) {
 			"testdata/write_charger_limit_200.json",
 			http.StatusOK,
 			testURL,
+			"{ \"value\": 100 }",
 		)
 
 		cl := inverter.NewClient(
