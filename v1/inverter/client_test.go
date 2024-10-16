@@ -138,7 +138,9 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 		data, err := cl.ReadSettingChargerStart(context.Background(), args)
 		require.NoError(t, err)
 		expected := &inverter.ReadSettingChargerStartResponse{
-			Data: &inverter.ChargerStartValue{
+			Data: struct {
+				Value string `json:"value"`
+			}{
 				Value: "01:00",
 			},
 		}
@@ -179,7 +181,9 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 		data, err := cl.ReadSettingChargerEnd(context.Background(), args)
 		require.NoError(t, err)
 		expected := &inverter.ReadSettingChargerEndResponse{
-			Data: &inverter.ChargerEndValue{
+			Data: struct {
+				Value string `json:"value"`
+			}{
 				Value: "01:00",
 			},
 		}
@@ -220,7 +224,9 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 		data, err := cl.ReadSettingChargerEnabled(context.Background(), args)
 		require.NoError(t, err)
 		expected := &inverter.ReadSettingChargerEnabledResponse{
-			Data: &inverter.ChargerEnabledValue{
+			Data: struct {
+				Value bool `json:"value"`
+			}{
 				Value: true,
 			},
 		}
@@ -261,7 +267,9 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 		data, err := cl.ReadSettingChargerLimit(context.Background(), args)
 		require.NoError(t, err)
 		expected := &inverter.ReadSettingChargerLimitResponse{
-			Data: &inverter.ChargerLimitValue{
+			Data: struct {
+				Value int `json:"value"`
+			}{
 				Value: 100,
 			},
 		}
