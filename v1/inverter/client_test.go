@@ -12,7 +12,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/givenergy-client/v1/inverter"
+	"github.com/givenergy-go-client/v1/inverter"
 )
 
 const (

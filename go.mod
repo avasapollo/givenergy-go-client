@@ -1,4 +1,4 @@
-module github.com/givenergy-client
+module github.com/givenergy-go-client
 
 go 1.23.0
 
