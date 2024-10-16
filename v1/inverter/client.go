@@ -15,6 +15,10 @@ const (
 	DefaultSettingChargerLimit   = "77"
 )
 
+const (
+	fmtSettingRead = "%s/inverter/%s/settings/%s/read"
+)
+
 type Client struct {
 	baseURL string
 	token   string
@@ -88,7 +92,7 @@ func (c *Client) ReadSettingChargerStart(
 	ctx context.Context,
 	args *ReadSettingArgs,
 ) (*ReadSettingChargerStartResponse, error) {
-	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err
@@ -114,7 +118,7 @@ func (c *Client) ReadSettingChargerEnd(
 	ctx context.Context,
 	args *ReadSettingArgs,
 ) (*ReadSettingChargerEndResponse, error) {
-	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err
@@ -140,7 +144,7 @@ func (c *Client) ReadSettingChargerEnabled(
 	ctx context.Context,
 	args *ReadSettingArgs,
 ) (*ReadSettingChargerEnabledResponse, error) {
-	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err
@@ -166,7 +170,7 @@ func (c *Client) ReadSettingChargerLimit(
 	ctx context.Context,
 	args *ReadSettingArgs,
 ) (*ReadSettingChargerLimitResponse, error) {
-	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err

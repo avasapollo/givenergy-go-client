@@ -117,7 +117,7 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 		}
 
 		testURL := fmt.Sprintf(
-			"%s/inverter/%s/settings/%s",
+			"%s/inverter/%s/settings/%s/read",
 			baseURL,
 			args.InverterSerialNumber,
 			args.SettingID,
@@ -158,7 +158,7 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 		}
 
 		testURL := fmt.Sprintf(
-			"%s/inverter/%s/settings/%s",
+			"%s/inverter/%s/settings/%s/read",
 			baseURL,
 			args.InverterSerialNumber,
 			args.SettingID,
@@ -199,7 +199,7 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 		}
 
 		testURL := fmt.Sprintf(
-			"%s/inverter/%s/settings/%s",
+			"%s/inverter/%s/settings/%s/read",
 			baseURL,
 			args.InverterSerialNumber,
 			args.SettingID,
@@ -240,7 +240,7 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 		}
 
 		testURL := fmt.Sprintf(
-			"%s/inverter/%s/settings/%s",
+			"%s/inverter/%s/settings/%s/read",
 			baseURL,
 			args.InverterSerialNumber,
 			args.SettingID,
