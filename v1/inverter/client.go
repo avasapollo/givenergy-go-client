@@ -32,7 +32,7 @@ type ListSettingsArgs struct {
 }
 
 type Settings struct {
-	ID              string   `json:"id"`
+	ID              int      `json:"id"`
 	Name            string   `json:"name"`
 	Validation      string   `json:"validation"`
 	ValidationRules []string `json:"validation_rules"`
@@ -43,7 +43,7 @@ type ListSettingsResponse struct {
 }
 
 func (c *Client) ListSettings(ctx context.Context, args *ListSettingsArgs) (*ListSettingsResponse, error) {
-	u := fmt.Sprintf("%s/%s/settings", c.baseURL, args.InverterSerialNumber)
+	u := fmt.Sprintf("%s/inverter/%s/settings", c.baseURL, args.InverterSerialNumber)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ type ReadChargerStartResponse struct {
 }
 
 func (c *Client) ReadChargerStart(ctx context.Context, args *ReadSettingArgs) (*ReadChargerStartResponse, error) {
-	u := fmt.Sprintf("%s/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ type ReadChargerEndResponse struct {
 }
 
 func (c *Client) ReadChargerEnd(ctx context.Context, args *ReadSettingArgs) (*ReadChargerEndResponse, error) {
-	u := fmt.Sprintf("%s/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ type ReadChargerEnabledResponse struct {
 }
 
 func (c *Client) ReadChargerEnabled(ctx context.Context, args *ReadSettingArgs) (*ReadChargerEnabledResponse, error) {
-	u := fmt.Sprintf("%s/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err
@@ -140,7 +140,7 @@ type ReadChargerLimitResponse struct {
 }
 
 func (c *Client) ReadChargerLimit(ctx context.Context, args *ReadSettingArgs) (*ReadChargerLimitResponse, error) {
-	u := fmt.Sprintf("%s/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
+	u := fmt.Sprintf("%s/inverter/%s/settings/%s", c.baseURL, args.InverterSerialNumber, args.SettingID)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
 	if err != nil {
 		return nil, err

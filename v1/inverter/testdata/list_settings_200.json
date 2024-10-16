@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "id": 266,
+      "name": "DC Discharge 3 End Time",
+      "validation": "Value format should be HH:mm. Use correct time range for hour and minutes",
+      "validation_rules": [
+        "date_format:H:i"
+      ]
+    }
+  ]
+}
