@@ -77,9 +77,13 @@ func TestClient_ListSettings(t *testing.T) {
 			InverterSerialNumber: "inverter-1",
 		}
 
-		// Define the URL you want to mock
 		testURL := fmt.Sprintf("%s/inverter/%s/settings", baseURL, args.InverterSerialNumber)
-		mockHTTPClient := newMockClient(t, "testdata/list_settings_200.json", http.StatusOK, testURL)
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/list_settings_200.json",
+			http.StatusOK,
+			testURL,
+		)
 
 		cl := inverter.NewClient(testToken, inverter.WithHTTPClient(mockHTTPClient))
 
@@ -95,6 +99,170 @@ func TestClient_ListSettings(t *testing.T) {
 						"date_format:H:i",
 					},
 				},
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
+
+func TestClient_ReadSettingChargerStart(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.ReadSettingArgs{
+			InverterSerialNumber: "inverter-1",
+			SettingID:            inverter.DefaultSettingChargerStart,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/settings/%s",
+			baseURL,
+			args.InverterSerialNumber,
+			args.SettingID,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/read_charger_start_200.json",
+			http.StatusOK,
+			testURL,
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.ReadSettingChargerStart(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.ReadSettingChargerStartResponse{
+			Data: &inverter.ChargerStartValue{
+				Value: "01:00",
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
+
+func TestClient_ReadSettingChargerEnd(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.ReadSettingArgs{
+			InverterSerialNumber: "inverter-1",
+			SettingID:            inverter.DefaultSettingChargerEnd,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/settings/%s",
+			baseURL,
+			args.InverterSerialNumber,
+			args.SettingID,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/read_charger_end_200.json",
+			http.StatusOK,
+			testURL,
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.ReadSettingChargerEnd(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.ReadSettingChargerEndResponse{
+			Data: &inverter.ChargerEndValue{
+				Value: "01:00",
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
+
+func TestClient_ReadSettingChargerEnabled(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.ReadSettingArgs{
+			InverterSerialNumber: "inverter-1",
+			SettingID:            inverter.DefaultSettingChargerEnabled,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/settings/%s",
+			baseURL,
+			args.InverterSerialNumber,
+			args.SettingID,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/read_charger_enabled_200.json",
+			http.StatusOK,
+			testURL,
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.ReadSettingChargerEnabled(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.ReadSettingChargerEnabledResponse{
+			Data: &inverter.ChargerEnabledValue{
+				Value: true,
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
+
+func TestClient_ReadSettingChargerLimit(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.ReadSettingArgs{
+			InverterSerialNumber: "inverter-1",
+			SettingID:            inverter.DefaultSettingChargerLimit,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/settings/%s",
+			baseURL,
+			args.InverterSerialNumber,
+			args.SettingID,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/read_charger_limit_200.json",
+			http.StatusOK,
+			testURL,
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.ReadSettingChargerLimit(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.ReadSettingChargerLimitResponse{
+			Data: &inverter.ChargerLimitValue{
+				Value: 100,
 			},
 		}
 		require.Equal(t, expected, data)
