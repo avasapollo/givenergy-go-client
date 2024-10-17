@@ -17,6 +17,7 @@ const (
 	DefaultSettingDischargeEnabled = "56"
 	DefaultSettingDischargeStart   = "53"
 	DefaultSettingDischargeEnd     = "54"
+	DefaultSettingEcoModeEnabled   = "24"
 )
 
 const (
@@ -512,6 +513,68 @@ func (c *Client) WriteSettingDischargeEnd(
 	}
 
 	res := new(WriteSettingDischargeEndResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type ReadSettingEcoModeEnabledResponse struct {
+	Data struct {
+		Value bool `json:"value"`
+	} `json:"data"`
+}
+
+func (c *Client) ReadSettingEcoModeEnabled(
+	ctx context.Context,
+	args *ReadSettingArgs,
+) (*ReadSettingEcoModeEnabledResponse, error) {
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(ReadSettingEcoModeEnabledResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type WriteSettingEcoModeEnabledArgs struct {
+	InverterSerialNumber string  `json:"-"`
+	SettingID            string  `json:"-"`
+	Value                bool    `json:"value"`
+	Context              *string `json:"context,omitempty"`
+}
+
+type WriteSettingEcoModeEnabledResponse struct {
+	Data struct {
+		Value   bool   `json:"value"`
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+	} `json:"data"`
+}
+
+func (c *Client) WriteSettingEcoModeEnabled(
+	ctx context.Context,
+	args *WriteSettingEcoModeEnabledArgs,
+) (*WriteSettingEcoModeEnabledResponse, error) {
+	u := fmt.Sprintf(fmtSettingWrite, c.baseURL, args.InverterSerialNumber, args.SettingID)
+
+	b, err := json.Marshal(args)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(WriteSettingEcoModeEnabledResponse)
 	if err := c.do(req, res); err != nil {
 		return nil, err
 	}
