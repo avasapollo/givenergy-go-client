@@ -437,7 +437,7 @@ type WriteSettingDischargeStartResponse struct {
 
 func (c *Client) WriteSettingDischargeStart(
 	ctx context.Context,
-	args *WriteSettingChargeStartArgs,
+	args *WriteSettingDischargeStartArgs,
 ) (*WriteSettingDischargeStartResponse, error) {
 	u := fmt.Sprintf(fmtSettingWrite, c.baseURL, args.InverterSerialNumber, args.SettingID)
 
