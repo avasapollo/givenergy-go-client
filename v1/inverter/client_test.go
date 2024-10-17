@@ -136,7 +136,7 @@ func TestClient_ListSettings(t *testing.T) {
 	})
 }
 
-func TestClient_ReadSettingChargerStart(t *testing.T) {
+func TestClient_ReadSettingChargeStart(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
@@ -144,7 +144,7 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 
 		args := &inverter.ReadSettingArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerStart,
+			SettingID:            inverter.DefaultSettingChargeStart,
 		}
 
 		testURL := fmt.Sprintf(
@@ -156,7 +156,7 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/read_charger_start_200.json",
+			"testdata/read_Charge_start_200.json",
 			http.StatusOK,
 			testURL,
 			"",
@@ -167,9 +167,9 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.ReadSettingChargerStart(context.Background(), args)
+		data, err := cl.ReadSettingChargeStart(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.ReadSettingChargerStartResponse{
+		expected := &inverter.ReadSettingChargeStartResponse{
 			Data: struct {
 				Value string `json:"value"`
 			}{
@@ -180,15 +180,15 @@ func TestClient_ReadSettingChargerStart(t *testing.T) {
 	})
 }
 
-func TestClient_WriteSettingChargerStart(t *testing.T) {
+func TestClient_WriteSettingChargeStart(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 
-		args := &inverter.WriteSettingChargerStartArgs{
+		args := &inverter.WriteSettingChargeStartArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerEnd,
+			SettingID:            inverter.DefaultSettingChargeEnd,
 			Value:                "16:00",
 		}
 
@@ -201,7 +201,7 @@ func TestClient_WriteSettingChargerStart(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/write_charger_start_200.json",
+			"testdata/write_Charge_start_200.json",
 			http.StatusOK,
 			testURL,
 			"{ \"value\":\"16:00\" }",
@@ -212,9 +212,9 @@ func TestClient_WriteSettingChargerStart(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.WriteSettingChargerStart(context.Background(), args)
+		data, err := cl.WriteSettingChargeStart(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.WriteSettingChargerStartResponse{
+		expected := &inverter.WriteSettingChargeStartResponse{
 			Data: struct {
 				Value   string `json:"value"`
 				Success bool   `json:"success"`
@@ -229,7 +229,7 @@ func TestClient_WriteSettingChargerStart(t *testing.T) {
 	})
 }
 
-func TestClient_ReadSettingChargerEnd(t *testing.T) {
+func TestClient_ReadSettingChargeEnd(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
@@ -237,7 +237,7 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 
 		args := &inverter.ReadSettingArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerEnd,
+			SettingID:            inverter.DefaultSettingChargeEnd,
 		}
 
 		testURL := fmt.Sprintf(
@@ -249,7 +249,7 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/read_charger_end_200.json",
+			"testdata/read_Charge_end_200.json",
 			http.StatusOK,
 			testURL,
 			"",
@@ -260,9 +260,9 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.ReadSettingChargerEnd(context.Background(), args)
+		data, err := cl.ReadSettingChargeEnd(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.ReadSettingChargerEndResponse{
+		expected := &inverter.ReadSettingChargeEndResponse{
 			Data: struct {
 				Value string `json:"value"`
 			}{
@@ -273,15 +273,15 @@ func TestClient_ReadSettingChargerEnd(t *testing.T) {
 	})
 }
 
-func TestClient_WriteSettingChargerEnd(t *testing.T) {
+func TestClient_WriteSettingChargeEnd(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 
-		args := &inverter.WriteSettingChargerEndArgs{
+		args := &inverter.WriteSettingChargeEndArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerEnd,
+			SettingID:            inverter.DefaultSettingChargeEnd,
 			Value:                "16:00",
 		}
 
@@ -294,7 +294,7 @@ func TestClient_WriteSettingChargerEnd(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/write_charger_end_200.json",
+			"testdata/write_Charge_end_200.json",
 			http.StatusOK,
 			testURL,
 			"{ \"value\":\"16:00\" }",
@@ -305,9 +305,9 @@ func TestClient_WriteSettingChargerEnd(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.WriteSettingChargerEnd(context.Background(), args)
+		data, err := cl.WriteSettingChargeEnd(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.WriteSettingChargerEndResponse{
+		expected := &inverter.WriteSettingChargeEndResponse{
 			Data: struct {
 				Value   string `json:"value"`
 				Success bool   `json:"success"`
@@ -322,7 +322,7 @@ func TestClient_WriteSettingChargerEnd(t *testing.T) {
 	})
 }
 
-func TestClient_ReadSettingChargerEnabled(t *testing.T) {
+func TestClient_ReadSettingChargeEnabled(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
@@ -330,7 +330,7 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 
 		args := &inverter.ReadSettingArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerEnabled,
+			SettingID:            inverter.DefaultSettingChargeEnabled,
 		}
 
 		testURL := fmt.Sprintf(
@@ -342,7 +342,7 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/read_charger_enabled_200.json",
+			"testdata/read_Charge_enabled_200.json",
 			http.StatusOK,
 			testURL,
 			"",
@@ -353,9 +353,9 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.ReadSettingChargerEnabled(context.Background(), args)
+		data, err := cl.ReadSettingChargeEnabled(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.ReadSettingChargerEnabledResponse{
+		expected := &inverter.ReadSettingChargeEnabledResponse{
 			Data: struct {
 				Value bool `json:"value"`
 			}{
@@ -366,15 +366,15 @@ func TestClient_ReadSettingChargerEnabled(t *testing.T) {
 	})
 }
 
-func TestClient_WriteSettingChargerEnabled(t *testing.T) {
+func TestClient_WriteSettingChargeEnabled(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 
-		args := &inverter.WriteSettingChargerEnabledArgs{
+		args := &inverter.WriteSettingChargeEnabledArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerEnabled,
+			SettingID:            inverter.DefaultSettingChargeEnabled,
 			Value:                true,
 		}
 
@@ -387,7 +387,7 @@ func TestClient_WriteSettingChargerEnabled(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/write_charger_enabled_200.json",
+			"testdata/write_Charge_enabled_200.json",
 			http.StatusOK,
 			testURL,
 			"{ \"value\": true }",
@@ -398,9 +398,9 @@ func TestClient_WriteSettingChargerEnabled(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.WriteSettingChargerEnabled(context.Background(), args)
+		data, err := cl.WriteSettingChargeEnabled(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.WriteSettingChargerEnabledResponse{
+		expected := &inverter.WriteSettingChargeEnabledResponse{
 			Data: struct {
 				Value   bool   `json:"value"`
 				Success bool   `json:"success"`
@@ -415,7 +415,7 @@ func TestClient_WriteSettingChargerEnabled(t *testing.T) {
 	})
 }
 
-func TestClient_ReadSettingChargerLimit(t *testing.T) {
+func TestClient_ReadSettingChargeLimit(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
@@ -423,7 +423,7 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 
 		args := &inverter.ReadSettingArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerLimit,
+			SettingID:            inverter.DefaultSettingChargeLimit,
 		}
 
 		testURL := fmt.Sprintf(
@@ -435,7 +435,7 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/read_charger_limit_200.json",
+			"testdata/read_Charge_limit_200.json",
 			http.StatusOK,
 			testURL,
 			"",
@@ -446,9 +446,9 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.ReadSettingChargerLimit(context.Background(), args)
+		data, err := cl.ReadSettingChargeLimit(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.ReadSettingChargerLimitResponse{
+		expected := &inverter.ReadSettingChargeLimitResponse{
 			Data: struct {
 				Value int `json:"value"`
 			}{
@@ -459,15 +459,15 @@ func TestClient_ReadSettingChargerLimit(t *testing.T) {
 	})
 }
 
-func TestClient_WriteSettingChargerLimit(t *testing.T) {
+func TestClient_WriteSettingChargeLimit(t *testing.T) {
 	t.Parallel()
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 
-		args := &inverter.WriteSettingChargerLimitArgs{
+		args := &inverter.WriteSettingChargeLimitArgs{
 			InverterSerialNumber: "inverter-1",
-			SettingID:            inverter.DefaultSettingChargerLimit,
+			SettingID:            inverter.DefaultSettingChargeLimit,
 			Value:                100,
 		}
 
@@ -480,7 +480,7 @@ func TestClient_WriteSettingChargerLimit(t *testing.T) {
 
 		mockHTTPClient := newMockClient(
 			t,
-			"testdata/write_charger_limit_200.json",
+			"testdata/write_Charge_limit_200.json",
 			http.StatusOK,
 			testURL,
 			"{ \"value\": 100 }",
@@ -491,9 +491,9 @@ func TestClient_WriteSettingChargerLimit(t *testing.T) {
 			inverter.WithHTTPClient(mockHTTPClient),
 		)
 
-		data, err := cl.WriteSettingChargerLimit(context.Background(), args)
+		data, err := cl.WriteSettingChargeLimit(context.Background(), args)
 		require.NoError(t, err)
-		expected := &inverter.WriteSettingChargerLimitResponse{
+		expected := &inverter.WriteSettingChargeLimitResponse{
 			Data: struct {
 				Value   int    `json:"value"`
 				Success bool   `json:"success"`
