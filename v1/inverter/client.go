@@ -25,6 +25,7 @@ const (
 	fmtSettingRead      = "%s/inverter/%s/settings/%s/read"
 	fmtSettingWrite     = "%s/inverter/%s/settings/%s/write"
 	fmtSystemDataLatest = "%s/inverter/%s/system-data/latest"
+	fmtEvents           = "%s/inverter/%s/events"
 )
 
 type Client struct {
@@ -585,7 +586,7 @@ func (c *Client) WriteSettingEcoModeEnabled(
 }
 
 type SystemDataLatestArgs struct {
-	InverterSerialNumber string `json:"-"`
+	InverterSerialNumber string
 }
 
 type DataSolar struct {
@@ -643,6 +644,55 @@ func (c *Client) SystemDataLatest(ctx context.Context, args *SystemDataLatestArg
 	}
 
 	res := new(SystemDataLatestResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type EventsArgs struct {
+	InverterSerialNumber string
+	Page                 *int
+}
+
+type Event struct {
+	Event     string    `json:"event"`
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+}
+
+type EventsResponse struct {
+	Data  []*Event `json:"data"`
+	Links struct {
+		First string      `json:"first"`
+		Last  string      `json:"last"`
+		Prev  interface{} `json:"prev"`
+		Next  interface{} `json:"next"`
+	} `json:"links"`
+	Meta struct {
+		CurrentPage int    `json:"current_page"`
+		From        int    `json:"from"`
+		LastPage    int    `json:"last_page"`
+		Path        string `json:"path"`
+		PerPage     int    `json:"per_page"`
+		To          int    `json:"to"`
+		Total       int    `json:"total"`
+	} `json:"meta"`
+}
+
+func (c *Client) Events(ctx context.Context, args *EventsArgs) (*EventsResponse, error) {
+	u := fmt.Sprintf(fmtEvents, c.baseURL, args.InverterSerialNumber)
+	if args.Page != nil {
+		u = fmt.Sprintf("%s?page=%d", u, *args.Page)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(EventsResponse)
 	if err := c.do(req, res); err != nil {
 		return nil, err
 	}

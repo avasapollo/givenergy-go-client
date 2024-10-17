@@ -957,3 +957,92 @@ func TestClient_SystemDataLatest(t *testing.T) {
 		require.Equal(t, expected, data)
 	})
 }
+
+func TestClient_Events(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+		page := 1
+
+		args := &inverter.EventsArgs{
+			InverterSerialNumber: "inverter-1",
+			Page:                 &page,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/events?page=1",
+			baseURL,
+			args.InverterSerialNumber,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/events_200.json",
+			http.StatusOK,
+			testURL,
+			"",
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.Events(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.EventsResponse{
+			Data: []*inverter.Event{
+				{
+					Event:     "Battery Voltage Low",
+					StartTime: time.Date(2024, 10, 3, 11, 33, 7, 0, time.UTC),
+					EndTime:   time.Date(2024, 10, 3, 11, 55, 21, 0, time.UTC),
+				},
+				{
+					Event:     "BMS Communication Fail",
+					StartTime: time.Date(2024, 10, 3, 11, 33, 7, 0, time.UTC),
+					EndTime:   time.Date(2024, 10, 3, 11, 55, 21, 0, time.UTC),
+				},
+				{
+					Event:     "BMS Communication Fail",
+					StartTime: time.Date(2024, 9, 30, 16, 28, 31, 0, time.UTC),
+					EndTime:   time.Date(2024, 10, 3, 9, 54, 32, 0, time.UTC),
+				},
+				{
+					Event:     "Electricity Meter Com Fail",
+					StartTime: time.Date(2024, 9, 30, 16, 10, 30, 0, time.UTC),
+					EndTime:   time.Date(2024, 10, 3, 12, 1, 6, 0, time.UTC),
+				},
+			},
+			Links: struct {
+				First string      `json:"first"`
+				Last  string      `json:"last"`
+				Prev  interface{} `json:"prev"`
+				Next  interface{} `json:"next"`
+			}{
+				First: "https://api.givenergy.cloud/v1/inverter/CE2234G437/events?page=1",
+				Last:  "https://api.givenergy.cloud/v1/inverter/CE2234G437/events?page=1",
+				Prev:  nil,
+				Next:  nil,
+			},
+			Meta: struct {
+				CurrentPage int    `json:"current_page"`
+				From        int    `json:"from"`
+				LastPage    int    `json:"last_page"`
+				Path        string `json:"path"`
+				PerPage     int    `json:"per_page"`
+				To          int    `json:"to"`
+				Total       int    `json:"total"`
+			}{
+				CurrentPage: 1,
+				From:        1,
+				LastPage:    1,
+				Path:        "https://api.givenergy.cloud/v1/inverter/CE2234G437/events",
+				PerPage:     15,
+				To:          4,
+				Total:       4,
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
