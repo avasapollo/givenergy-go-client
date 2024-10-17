@@ -10,10 +10,13 @@ import (
 )
 
 const (
-	DefaultSettingChargeStart   = "64"
-	DefaultSettingChargeEnd     = "65"
-	DefaultSettingChargeEnabled = "66"
-	DefaultSettingChargeLimit   = "77"
+	DefaultSettingChargeStart      = "64"
+	DefaultSettingChargeEnd        = "65"
+	DefaultSettingChargeEnabled    = "66"
+	DefaultSettingChargeLimit      = "77"
+	DefaultSettingDischargeEnabled = "56"
+	DefaultSettingDischargeStart   = "53"
+	DefaultSettingDischargeEnd     = "54"
 )
 
 const (
@@ -385,6 +388,130 @@ func (c *Client) WriteSettingDischargeEnabled(
 	}
 
 	res := new(WriteSettingDischargeEnabledResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type ReadSettingDischargeStartResponse struct {
+	Data struct {
+		Value string `json:"value"`
+	} `json:"data"`
+}
+
+func (c *Client) ReadSettingDischargeStart(
+	ctx context.Context,
+	args *ReadSettingArgs,
+) (*ReadSettingDischargeStartResponse, error) {
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(ReadSettingDischargeStartResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type WriteSettingDischargeStartArgs struct {
+	InverterSerialNumber string  `json:"-"`
+	SettingID            string  `json:"-"`
+	Value                string  `json:"value"`
+	Context              *string `json:"context,omitempty"`
+}
+
+type WriteSettingDischargeStartResponse struct {
+	Data struct {
+		Value   string `json:"value"`
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+	} `json:"data"`
+}
+
+func (c *Client) WriteSettingDischargeStart(
+	ctx context.Context,
+	args *WriteSettingChargeStartArgs,
+) (*WriteSettingDischargeStartResponse, error) {
+	u := fmt.Sprintf(fmtSettingWrite, c.baseURL, args.InverterSerialNumber, args.SettingID)
+
+	b, err := json.Marshal(args)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(WriteSettingDischargeStartResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type ReadSettingDischargeEndResponse struct {
+	Data struct {
+		Value string `json:"value"`
+	} `json:"data"`
+}
+
+func (c *Client) ReadSettingDischargeEnd(
+	ctx context.Context,
+	args *ReadSettingArgs,
+) (*ReadSettingDischargeEndResponse, error) {
+	u := fmt.Sprintf(fmtSettingRead, c.baseURL, args.InverterSerialNumber, args.SettingID)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(ReadSettingDischargeEndResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type WriteSettingDischargeEndArgs struct {
+	InverterSerialNumber string  `json:"-"`
+	SettingID            string  `json:"-"`
+	Value                string  `json:"value"`
+	Context              *string `json:"context,omitempty"`
+}
+
+type WriteSettingDischargeEndResponse struct {
+	Data struct {
+		Value   string `json:"value"`
+		Success bool   `json:"success"`
+		Message string `json:"message"`
+	} `json:"data"`
+}
+
+func (c *Client) WriteSettingDischargeEnd(
+	ctx context.Context,
+	args *WriteSettingDischargeEndArgs,
+) (*WriteSettingDischargeEndResponse, error) {
+	u := fmt.Sprintf(fmtSettingWrite, c.baseURL, args.InverterSerialNumber, args.SettingID)
+
+	b, err := json.Marshal(args)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u, bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(WriteSettingDischargeEndResponse)
 	if err := c.do(req, res); err != nil {
 		return nil, err
 	}
