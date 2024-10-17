@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 const (
@@ -21,8 +22,9 @@ const (
 )
 
 const (
-	fmtSettingRead  = "%s/inverter/%s/settings/%s/read"
-	fmtSettingWrite = "%s/inverter/%s/settings/%s/write"
+	fmtSettingRead      = "%s/inverter/%s/settings/%s/read"
+	fmtSettingWrite     = "%s/inverter/%s/settings/%s/write"
+	fmtSystemDataLatest = "%s/inverter/%s/system-data/latest"
 )
 
 type Client struct {
@@ -575,6 +577,72 @@ func (c *Client) WriteSettingEcoModeEnabled(
 	}
 
 	res := new(WriteSettingEcoModeEnabledResponse)
+	if err := c.do(req, res); err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+type SystemDataLatestArgs struct {
+	InverterSerialNumber string `json:"-"`
+}
+
+type DataSolar struct {
+	Array   int     `json:"array"`
+	Voltage float64 `json:"voltage"`
+	Current float64 `json:"current"`
+	Power   int     `json:"power"`
+}
+
+type SystemDataSolar struct {
+	Power  int          `json:"power"`
+	Arrays []*DataSolar `json:"arrays"`
+}
+
+type SystemDataGrid struct {
+	Voltage   float64 `json:"voltage"`
+	Current   float64 `json:"current"`
+	Power     int     `json:"power"`
+	Frequency int     `json:"frequency"`
+}
+
+type SystemDataBattery struct {
+	Percent     int `json:"percent"`
+	Power       int `json:"power"`
+	Temperature int `json:"temperature"`
+}
+
+type SystemDataInverter struct {
+	Temperature     float64 `json:"temperature"`
+	Power           int     `json:"power"`
+	OutputVoltage   float64 `json:"output_voltage"`
+	OutputFrequency float64 `json:"output_frequency"`
+	EpsPower        int     `json:"eps_power"`
+}
+
+type SystemData struct {
+	Time        time.Time           `json:"time"`
+	Status      string              `json:"status"`
+	Solar       *SystemDataSolar    `json:"solar"`
+	Grid        *SystemDataGrid     `json:"grid"`
+	Battery     *SystemDataBattery  `json:"battery"`
+	Inverter    *SystemDataInverter `json:"inverter"`
+	Consumption int                 `json:"consumption"`
+}
+
+type SystemDataLatestResponse struct {
+	Data *SystemData `json:"data"`
+}
+
+func (c *Client) SystemDataLatest(ctx context.Context, args *SystemDataLatestArgs) (*SystemDataLatestResponse, error) {
+	u := fmt.Sprintf(fmtSystemDataLatest, c.baseURL, args.InverterSerialNumber)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := new(SystemDataLatestResponse)
 	if err := c.do(req, res); err != nil {
 		return nil, err
 	}

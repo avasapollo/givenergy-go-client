@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -874,6 +875,83 @@ func TestClient_WriteSettingEcoModeEnabled(t *testing.T) {
 				Value:   true,
 				Success: true,
 				Message: "Written Successfully",
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
+
+func TestClient_SystemDataLatest(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.SystemDataLatestArgs{
+			InverterSerialNumber: "inverter-1",
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/system-data/latest",
+			baseURL,
+			args.InverterSerialNumber,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/system_data_latest_200.json",
+			http.StatusOK,
+			testURL,
+			"",
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.SystemDataLatest(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.SystemDataLatestResponse{
+			Data: &inverter.SystemData{
+				Time:   time.Date(2024, 10, 17, 15, 22, 3, 0, time.UTC),
+				Status: "Normal",
+				Solar: &inverter.SystemDataSolar{
+					Power: 2684,
+					Arrays: []*inverter.DataSolar{
+						{
+							Array:   1,
+							Voltage: 244.3,
+							Current: 10.9,
+							Power:   2684,
+						},
+						{
+							Array:   2,
+							Voltage: 0,
+							Current: 0,
+							Power:   0,
+						},
+					},
+				},
+				Grid: &inverter.SystemDataGrid{
+					Voltage:   245.5,
+					Current:   5.2,
+					Power:     1235,
+					Frequency: 50,
+				},
+				Battery: &inverter.SystemDataBattery{
+					Percent:     96,
+					Power:       -1251,
+					Temperature: 21,
+				},
+				Inverter: &inverter.SystemDataInverter{
+					Temperature:     31.2,
+					Power:           -1265,
+					OutputVoltage:   244.3,
+					OutputFrequency: 50.04,
+					EpsPower:        0,
+				},
+				Consumption: 183,
 			},
 		}
 		require.Equal(t, expected, data)

@@ -1,0 +1,42 @@
+{
+  "data": {
+    "time": "2024-10-17T15:22:03Z",
+    "status": "Normal",
+    "solar": {
+      "power": 2684,
+      "arrays": [
+        {
+          "array": 1,
+          "voltage": 244.3,
+          "current": 10.9,
+          "power": 2684
+        },
+        {
+          "array": 2,
+          "voltage": 0,
+          "current": 0,
+          "power": 0
+        }
+      ]
+    },
+    "grid": {
+      "voltage": 245.5,
+      "current": 5.2,
+      "power": 1235,
+      "frequency": 50
+    },
+    "battery": {
+      "percent": 96,
+      "power": -1251,
+      "temperature": 21
+    },
+    "inverter": {
+      "temperature": 31.2,
+      "power": -1265,
+      "output_voltage": 244.3,
+      "output_frequency": 50.04,
+      "eps_power": 0
+    },
+    "consumption": 183
+  }
+}
