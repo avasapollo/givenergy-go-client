@@ -786,3 +786,96 @@ func TestClient_WriteSettingDischargeEnabled(t *testing.T) {
 		require.Equal(t, expected, data)
 	})
 }
+
+func TestClient_ReadSettingEcoModeEnabled(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.ReadSettingArgs{
+			InverterSerialNumber: "inverter-1",
+			SettingID:            inverter.DefaultSettingEcoModeEnabled,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/settings/%s/read",
+			baseURL,
+			args.InverterSerialNumber,
+			args.SettingID,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/read_eco_mode_enabled_200.json",
+			http.StatusOK,
+			testURL,
+			"",
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.ReadSettingEcoModeEnabled(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.ReadSettingEcoModeEnabledResponse{
+			Data: struct {
+				Value bool `json:"value"`
+			}{
+				Value: true,
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
+
+func TestClient_WriteSettingEcoModeEnabled(t *testing.T) {
+	t.Parallel()
+
+	t.Run("success", func(t *testing.T) {
+		t.Parallel()
+
+		args := &inverter.WriteSettingEcoModeEnabledArgs{
+			InverterSerialNumber: "inverter-1",
+			SettingID:            inverter.DefaultSettingEcoModeEnabled,
+			Value:                true,
+		}
+
+		testURL := fmt.Sprintf(
+			"%s/inverter/%s/settings/%s/write",
+			baseURL,
+			args.InverterSerialNumber,
+			args.SettingID,
+		)
+
+		mockHTTPClient := newMockClient(
+			t,
+			"testdata/write_eco_mode_enabled_200.json",
+			http.StatusOK,
+			testURL,
+			"{ \"value\": true }",
+		)
+
+		cl := inverter.NewClient(
+			testToken,
+			inverter.WithHTTPClient(mockHTTPClient),
+		)
+
+		data, err := cl.WriteSettingEcoModeEnabled(context.Background(), args)
+		require.NoError(t, err)
+		expected := &inverter.WriteSettingEcoModeEnabledResponse{
+			Data: struct {
+				Value   bool   `json:"value"`
+				Success bool   `json:"success"`
+				Message string `json:"message"`
+			}{
+				Value:   true,
+				Success: true,
+				Message: "Written Successfully",
+			},
+		}
+		require.Equal(t, expected, data)
+	})
+}
