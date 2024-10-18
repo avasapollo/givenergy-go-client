@@ -605,7 +605,7 @@ type SystemDataGrid struct {
 	Voltage   float64 `json:"voltage"`
 	Current   float64 `json:"current"`
 	Power     int     `json:"power"`
-	Frequency int     `json:"frequency"`
+	Frequency float64 `json:"frequency"`
 }
 
 type SystemDataBattery struct {
